@@ -1,6 +1,6 @@
-# 🧠 Bayesian Learning Lab: Regression & Networks
+# 🧠 BayesQuest: Regression & Networks
 
-Welcome to the **Bayesian Learning Lab**, an interactive Shiny app that teaches Bayesian statistics through simulation, visualization, and comparison with frequentist methods.
+Welcome to the **BayesQuest**, an interactive Shiny app that teaches Bayesian statistics through simulation, visualization, and comparison with frequentist methods.
 
 ---
 
@@ -13,24 +13,14 @@ Welcome to the **Bayesian Learning Lab**, an interactive Shiny app that teaches 
 
 ---
 
-## 🌐 Launch App
-
-If deployed using [shinyapps.io](https://www.shinyapps.io) or [Shiny Server](https://shiny.rstudio.com/deploy/), include a live link like:
-
-👉 **[Launch the App](https://yourusername.shinyapps.io/bayesian-learning-lab/)**
-
-Or run locally using R (see below).
-
----
-
 ## 💻 Run Locally
 
 To run this app on your machine:
 
 1. Clone this repo:
    ```bash
-   git clone https://github.com/yourusername/bayesian-learning-lab.git
-   cd bayesian-learning-lab
+   git clone https://github.com/ngsFC/BayesQuest.git
+   cd BayesQuest
    ```
 
 2. Open `app.R` in RStudio.
@@ -45,14 +35,6 @@ To run this app on your machine:
    ```r
    shiny::runApp()
    ```
-
----
-
-## 📸 Screenshots
-
-| Bayesian Regression | Gene Network Inference |
-|---------------------|------------------------|
-| ![regression](screenshots/regression.png) | ![network](screenshots/network.png) |
 
 ---
 
@@ -81,3 +63,6 @@ To run this app on your machine:
 ## 🔒 License
 
 MIT License © 2025 Your Name
+
+---
+
