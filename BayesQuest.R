@@ -9,7 +9,7 @@ library(shinyjs)
 
 # Define UI
 ui <- dashboardPage(
-  dashboardHeader(title = "🧠 Bayesian Learning Lab: Regression & Networks"),
+  dashboardHeader(title = "🧠 BayesQuest: Regression & Networks"),
   
   dashboardSidebar(
     useShinyjs(),
@@ -98,7 +98,7 @@ ui <- dashboardPage(
               fluidRow(
                 column(12,
                        div(class = "intro-box",
-                           h1("🧠 Welcome to the Bayesian Learning Lab!", style = "text-align: center;"),
+                           h1("🧠 Welcome to the BayesQuest!", style = "text-align: center;"),
                            h3("Master Statistical Thinking Through Interactive Examples", style = "text-align: center;"),
                            br(),
                            
