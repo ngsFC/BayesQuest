@@ -35,6 +35,17 @@ ui <- dashboardPage(
     useShinyjs(),
     tags$head(
       tags$script('window.MathJax = { tex: { inlineMath: [["$", "$"], ["\\\\(", "\\\\)"]], displayMath: [["$$", "$$"], ["\\\\[", "\\\\]"]] } };'),
+      tags$script(HTML('
+        $(document).ready(function(){
+          // Force tab functionality
+          $(".sidebar-menu a").on("click", function(){
+            var tab = $(this).attr("data-value");
+            if(tab) {
+              Shiny.onInputChange("sidebarMenu", tab);
+            }
+          });
+        });
+      ')),
       tags$script(src = "https://polyfill.io/v3/polyfill.min.js?features=es6"),
       tags$script(id = "MathJax-script", async = NA, src = "https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"),
       tags$style(HTML('
@@ -325,7 +336,7 @@ ui <- dashboardPage(
                                           tags$li("Works well with little data"),
                                           tags$li("Fornisce incertezza completa"),
                                           tags$li("Si aggiorna naturalmente"),
-                                          tags$li("Più intuitivo per le decisioni")
+                                          tags$li("More intuitive for decision making")
                                         )
                                     )
                              ),
@@ -337,7 +348,7 @@ ui <- dashboardPage(
                                           tags$li("Finanza: valutazione del rischio"),
                                           tags$li("Intelligenza Artificiale"),
                                           tags$li("Ricerca scientifica"),
-                                          tags$li("Controllo qualità industriale")
+                                          tags$li("Industrial quality control")
                                         )
                                     )
                              )
@@ -351,10 +362,10 @@ ui <- dashboardPage(
       tabItem(tabName = "foundations",
               fluidRow(
                 column(12,
-                       h2("📊 I Fondamenti Matematici"),
+                       h2("📊 Mathematical Foundations"),
                        
                        div(class = "theory-box",
-                           h3("🔑 Il Teorema di Bayes"),
+                           h3("🔑 Bayes' Theorem"),
                            
                            div(class = "explanation-box",
                                h4("🤔 What does this formula do?"),
@@ -386,7 +397,7 @@ ui <- dashboardPage(
                                         p(strong("CHE COS'È:")),
                                         p("How likely it is to see this data IF your hypothesis is true"),
                                         p(strong("ESEMPIO:")),
-                                        p("Se la moneta è equilibrata, quanto è probabile vedere 8 teste su 10 lanci?")
+                                        p("If the coin is fair, how likely is it to see 8 heads in 10 flips?")
                                     )
                              ),
                              column(3,
@@ -395,7 +406,7 @@ ui <- dashboardPage(
                                         p(strong("CHE COS'È:")),
                                         p("How likely it is to see this data in general"),
                                         p(strong("ESEMPIO:")),
-                                        p("Probabilità di vedere 8 teste su 10 lanci, considerando TUTTE le possibili monete")
+                                        p("Probability of seeing 8 heads in 10 flips, considering ALL possible coins")
                                     )
                              ),
                              column(3,
@@ -404,7 +415,7 @@ ui <- dashboardPage(
                                         p(strong("CHE COS'È:")),
                                         p("Your belief AFTER seeing the data"),
                                         p(strong("ESEMPIO:")),
-                                        p("'Dopo aver visto 8 teste su 10, ora penso che la probabilità di testa sia 65%'")
+                                        p("'After seeing 8 heads in 10, I now think the probability of heads is 65%'")
                                     )
                              )
                            )
@@ -421,7 +432,7 @@ ui <- dashboardPage(
                                h4("📝 Il Problema:"),
                                p("Hai due monete: una normale (50% testa) e una truccata (80% testa). 
                                  Ne scegli una a caso e fai 5 lanci, ottenendo: TESTA, TESTA, CROCE, TESTA, TESTA. 
-                                 Qual è la probabilità che tu abbia scelto la moneta truccata?")
+                                 What's the probability you chose the rigged coin?")
                            ),
                            
                            h4("🔢 Passo 1: Prior (Credenza Iniziale)"),
@@ -433,7 +444,7 @@ ui <- dashboardPage(
                                )
                            ),
                            
-                           h4("🔢 Passo 2: Likelihood (Probabilità dei Dati)"),
+                           h4("🔢 Step 2: Likelihood (Data Probability)"),
                            div(class = "highlight-box",
                                p("Sequenza osservata: TTCTT (4 teste su 5 lanci)"),
                                p(strong("Se moneta normale (p=0.5):")),
@@ -454,7 +465,7 @@ ui <- dashboardPage(
                                p(strong("P(Truccata | TTCTT) = (0.08192 × 0.5) / 0.056585 = 72.4%")),
                                br(),
                                p("🎯 INTERPRETAZIONE: Dopo aver visto 4 teste su 5 lanci, 
-                                 c'è una probabilità del 72.4% che tu abbia scelto la moneta truccata!")
+                                 there's a 72.4% probability you chose the rigged coin!")
                            )
                        )
                 )
