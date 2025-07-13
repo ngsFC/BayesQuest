@@ -1,0 +1,743 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Advanced Bayesian Methods: From Conjugate Priors to Modern Approximations</title>
+    <script src="https://cdn.jsdelivr.net/npm/reveal.js@4.3.1/dist/reveal.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/reveal.js@4.3.1/plugin/math/math.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/reveal.js@4.3.1/plugin/highlight/highlight.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@4.3.1/dist/reveal.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@4.3.1/dist/theme/white.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@4.3.1/plugin/highlight/monokai.css">
+    <style>
+        .reveal h1, .reveal h2, .reveal h3 { color: #2c3e50; }
+        .reveal .progress { color: #3498db; }
+        .bayesian-box { background: #ecf0f1; padding: 20px; border-left: 5px solid #3498db; margin: 20px 0; }
+        .formula-box { background: #f8f9fa; padding: 15px; border: 2px dashed #95a5a6; text-align: center; margin: 15px 0; }
+        .example-box { background: #e8f5e8; padding: 15px; border-left: 5px solid #27ae60; margin: 15px 0; }
+        .warning-box { background: #fdf2e9; padding: 15px; border-left: 5px solid #e67e22; margin: 15px 0; }
+        .comparison-table { width: 100%; border-collapse: collapse; margin: 20px 0; }
+        .comparison-table th, .comparison-table td { border: 1px solid #ddd; padding: 12px; text-align: left; }
+        .comparison-table th { background-color: #f2f2f2; }
+        .two-column { display: flex; gap: 20px; }
+        .column { flex: 1; }
+        .small-text { font-size: 0.8em; }
+        .highlight { background-color: #fff3cd; padding: 2px 5px; border-radius: 3px; }
+    </style>
+</head>
+<body>
+    <div class="reveal">
+        <div class="slides">
+            <!-- Title Slide -->
+            <section>
+                <h1>Advanced Bayesian Methods</h1>
+                <h3>From Conjugate Priors to Modern Approximations</h3>
+                <p>
+                    <small>Normal & Poisson Distributions • Variational Inference • Spike & Slab Methods</small>
+                </p>
+                <p style="margin-top: 50px;">
+                    <small>Duration: 40-45 minutes</small>
+                </p>
+            </section>
+
+            <!-- Outline -->
+            <section>
+                <h2>Presentation Outline</h2>
+                <ol>
+                    <li><strong>Bayesian Foundations</strong> (5 min)
+                        <ul><li>Core principles and motivation</li></ul>
+                    </li>
+                    <li><strong>Conjugate Priors</strong> (15 min)
+                        <ul>
+                            <li>Normal distribution analysis</li>
+                            <li>Poisson distribution analysis</li>
+                        </ul>
+                    </li>
+                    <li><strong>Modern Approximation Methods</strong> (20 min)
+                        <ul>
+                            <li>Variational Inference</li>
+                            <li>Spike & Slab for variable selection</li>
+                        </ul>
+                    </li>
+                    <li><strong>Applications & Conclusions</strong> (5 min)</li>
+                </ol>
+            </section>
+
+            <!-- Section 1: Bayesian Foundations -->
+            <section>
+                <section>
+                    <h2>Part I: Bayesian Foundations</h2>
+                    <div class="bayesian-box">
+                        <h3>Core Philosophy</h3>
+                        <p>"Probability quantifies uncertainty about parameters, not just long-run frequencies"</p>
+                    </div>
+                </section>
+
+                <section>
+                    <h3>Bayes' Theorem</h3>
+                    <div class="formula-box">
+                        $$P(\theta | \mathbf{x}) = \frac{P(\mathbf{x} | \theta) P(\theta)}{P(\mathbf{x})}$$
+                    </div>
+                    <div class="two-column">
+                        <div class="column">
+                            <h4>Components:</h4>
+                            <ul>
+                                <li><strong>$P(\theta | \mathbf{x})$:</strong> Posterior</li>
+                                <li><strong>$P(\mathbf{x} | \theta)$:</strong> Likelihood</li>
+                                <li><strong>$P(\theta)$:</strong> Prior</li>
+                                <li><strong>$P(\mathbf{x})$:</strong> Evidence</li>
+                            </ul>
+                        </div>
+                        <div class="column">
+                            <div class="example-box">
+                                <strong>Interpretation:</strong><br>
+                                "How should I update my beliefs about $\theta$ after observing data $\mathbf{x}$?"
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <section>
+                    <h3>Why Bayesian Methods?</h3>
+                    <table class="comparison-table">
+                        <thead>
+                            <tr><th>Advantage</th><th>Description</th><th>Example</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Uncertainty Quantification</strong></td>
+                                <td>Direct probability statements</td>
+                                <td>"95% probability μ ∈ [1.2, 1.8]"</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Prior Knowledge</strong></td>
+                                <td>Incorporate domain expertise</td>
+                                <td>Historical data, expert opinion</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Small Sample Performance</strong></td>
+                                <td>Effective with limited data</td>
+                                <td>Clinical trials, rare events</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Hierarchical Modeling</strong></td>
+                                <td>Natural parameter sharing</td>
+                                <td>Multi-level data structures</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </section>
+            </section>
+
+            <!-- Section 2: Normal Distribution -->
+            <section>
+                <section>
+                    <h2>Part II: Conjugate Priors</h2>
+                    <h3>Normal Distribution Analysis</h3>
+                </section>
+
+                <section>
+                    <h3>Normal-Normal Conjugacy (Known Variance)</h3>
+                    <div class="two-column">
+                        <div class="column">
+                            <h4>Setup:</h4>
+                            <div class="formula-box">
+                                $$X_i \stackrel{iid}{\sim} N(\mu, \sigma^2)$$
+                                $$\mu \sim N(\mu_0, \tau_0^2)$$
+                            </div>
+                        </div>
+                        <div class="column">
+                            <h4>Posterior:</h4>
+                            <div class="formula-box">
+                                $$\mu | \mathbf{x} \sim N(\mu_n, \tau_n^2)$$
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <h4>Posterior Parameters:</h4>
+                    <div class="formula-box">
+                        $$\tau_n^{-2} = \tau_0^{-2} + n\sigma^{-2}$$
+                        $$\mu_n = \frac{\tau_0^{-2}\mu_0 + n\sigma^{-2}\bar{x}}{\tau_0^{-2} + n\sigma^{-2}}$$
+                    </div>
+                </section>
+
+                <section>
+                    <h3>Normal Distribution: Key Insights</h3>
+                    <div class="example-box">
+                        <h4>Precision Weighting</h4>
+                        <ul>
+                            <li>Posterior mean is <span class="highlight">precision-weighted average</span></li>
+                            <li>More precise information gets higher weight</li>
+                            <li>As $n \to \infty$: $\mu_n \to \bar{x}$ (data dominates)</li>
+                        </ul>
+                    </div>
+
+                    <div class="warning-box">
+                        <h4>Practical Considerations</h4>
+                        <ul>
+                            <li><strong>Prior choice:</strong> Affects finite-sample inference</li>
+                            <li><strong>Computational advantage:</strong> Analytical solution</li>
+                            <li><strong>Interpretability:</strong> Conjugacy preserves distribution family</li>
+                        </ul>
+                    </div>
+                </section>
+
+                <section>
+                    <h3>Example: Drug Efficacy Study</h3>
+                    <div class="example-box">
+                        <h4>Scenario</h4>
+                        <p>New drug reduces blood pressure. Historical studies suggest mean reduction = 12 mmHg (σ = 3).</p>
+                        
+                        <h4>Bayesian Analysis</h4>
+                        <ul>
+                            <li><strong>Prior:</strong> μ ~ N(12, 2²) [moderately confident]</li>
+                            <li><strong>Data:</strong> n = 20 patients, x̄ = 10.5 mmHg</li>
+                            <li><strong>Likelihood:</strong> σ = 3 (assumed known)</li>
+                        </ul>
+                    </div>
+
+                    <div class="formula-box">
+                        $$\tau_n^{-2} = 2^{-2} + 20 \cdot 3^{-2} = 0.25 + 2.22 = 2.47$$
+                        $$\mu_n = \frac{0.25 \cdot 12 + 2.22 \cdot 10.5}{2.47} = 10.7$$
+                    </div>
+                    
+                    <p class="small-text"><strong>Result:</strong> Posterior μ | x ~ N(10.7, 0.64²)</p>
+                </section>
+            </section>
+
+            <!-- Section 3: Poisson Distribution -->
+            <section>
+                <section>
+                    <h3>Poisson-Gamma Conjugacy</h3>
+                    <div class="two-column">
+                        <div class="column">
+                            <h4>Count Data Model:</h4>
+                            <div class="formula-box">
+                                $$X_i \stackrel{iid}{\sim} \text{Poisson}(\lambda)$$
+                                $$\lambda \sim \text{Gamma}(\alpha, \beta)$$
+                            </div>
+                        </div>
+                        <div class="column">
+                            <h4>Posterior:</h4>
+                            <div class="formula-box">
+                                $$\lambda | \mathbf{x} \sim \text{Gamma}(\alpha_n, \beta_n)$$
+                            </div>
+                        </div>
+                    </div>
+
+                    <h4>Update Rules:</h4>
+                    <div class="formula-box">
+                        $$\alpha_n = \alpha + \sum_{i=1}^n x_i$$
+                        $$\beta_n = \beta + n$$
+                    </div>
+
+                    <p class="small-text"><strong>Interpretation:</strong> Add observed counts to prior shape, add observations to prior rate</p>
+                </section>
+
+                <section>
+                    <h3>Poisson Applications</h3>
+                    <div class="two-column">
+                        <div class="column">
+                            <h4>Common Use Cases:</h4>
+                            <ul>
+                                <li>Hospital emergency arrivals</li>
+                                <li>Software defects per module</li>
+                                <li>Network packet arrivals</li>
+                                <li>Gene mutations per sequence</li>
+                            </ul>
+                        </div>
+                        <div class="column">
+                            <div class="example-box">
+                                <h4>Key Properties:</h4>
+                                <ul>
+                                    <li>Natural for count data</li>
+                                    <li>Rate parameter λ > 0</li>
+                                    <li>Mean = Variance = λ</li>
+                                    <li>Memoryless property</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <section>
+                    <h3>Example: Website Traffic Analysis</h3>
+                    <div class="example-box">
+                        <h4>Problem</h4>
+                        <p>E-commerce site wants to model hourly visitor arrivals. Historical data suggests λ ≈ 50 visitors/hour.</p>
+                        
+                        <h4>Bayesian Setup</h4>
+                        <ul>
+                            <li><strong>Prior:</strong> λ ~ Gamma(100, 2) [E[λ] = 50, Var[λ] = 25]</li>
+                            <li><strong>Data:</strong> 10 hours of observation: {45, 52, 48, 55, 42, 49, 53, 47, 51, 58}</li>
+                        </ul>
+                    </div>
+
+                    <div class="formula-box">
+                        $$\alpha_n = 100 + (45 + 52 + \cdots + 58) = 100 + 500 = 600$$
+                        $$\beta_n = 2 + 10 = 12$$
+                        $$\lambda | \mathbf{x} \sim \text{Gamma}(600, 12)$$
+                    </div>
+                    
+                    <p class="small-text"><strong>Posterior mean:</strong> 600/12 = 50, <strong>Posterior std:</strong> √(600)/12 ≈ 2.04</p>
+                </section>
+
+                <section>
+                    <h3>Posterior Predictive Distribution</h3>
+                    <div class="bayesian-box">
+                        <h4>Prediction for Future Observations</h4>
+                        <p>For Poisson-Gamma, the posterior predictive is <span class="highlight">Negative Binomial</span>:</p>
+                        <div class="formula-box">
+                            $$P(X_{new} = k | \mathbf{x}) = \binom{k + \alpha_n - 1}{k} \left(\frac{\beta_n}{\beta_n + 1}\right)^{\alpha_n} \left(\frac{1}{\beta_n + 1}\right)^k$$
+                        </div>
+                    </div>
+
+                    <div class="warning-box">
+                        <h4>Practical Advantage</h4>
+                        <p>Unlike point estimates, provides <strong>full uncertainty quantification</strong> for predictions</p>
+                    </div>
+                </section>
+            </section>
+
+            <!-- Section 4: Variational Inference -->
+            <section>
+                <section>
+                    <h2>Part III: Modern Approximation Methods</h2>
+                    <h3>Variational Inference</h3>
+                </section>
+
+                <section>
+                    <h3>The Intractability Problem</h3>
+                    <div class="warning-box">
+                        <h4>When Conjugacy Breaks Down</h4>
+                        <ul>
+                            <li>Complex hierarchical models</li>
+                            <li>Non-conjugate priors</li>
+                            <li>Mixture models</li>
+                            <li>Neural networks with Bayesian weights</li>
+                        </ul>
+                    </div>
+
+                    <div class="formula-box">
+                        $$P(\theta | \mathbf{x}) = \frac{P(\mathbf{x} | \theta) P(\theta)}{P(\mathbf{x})} = \frac{P(\mathbf{x} | \theta) P(\theta)}{\int P(\mathbf{x} | \theta) P(\theta) d\theta}$$
+                    </div>
+
+                    <p class="small-text">The integral in the denominator is often <span class="highlight">analytically intractable</span></p>
+                </section>
+
+                <section>
+                    <h3>Variational Inference Approach</h3>
+                    <div class="bayesian-box">
+                        <h4>Core Idea</h4>
+                        <p>Approximate intractable posterior with simpler distribution from variational family</p>
+                        <div class="formula-box">
+                            $$q^*(\theta) = \arg\min_{q \in \mathcal{Q}} \text{KL}[q(\theta) || p(\theta | \mathbf{x})]$$
+                        </div>
+                    </div>
+
+                    <div class="two-column">
+                        <div class="column">
+                            <h4>Advantages:</h4>
+                            <ul>
+                                <li>Deterministic optimization</li>
+                                <li>Faster than MCMC</li>
+                                <li>Scales to large datasets</li>
+                                <li>Easy to parallelize</li>
+                            </ul>
+                        </div>
+                        <div class="column">
+                            <h4>Limitations:</h4>
+                            <ul>
+                                <li>Underestimates uncertainty</li>
+                                <li>Approximate solution only</li>
+                                <li>Local optima issues</li>
+                                <li>Family choice critical</li>
+                            </ul>
+                        </div>
+                    </div>
+                </section>
+
+                <section>
+                    <h3>Evidence Lower BOund (ELBO)</h3>
+                    <div class="formula-box">
+                        $$\log p(\mathbf{x}) = \text{ELBO}(q) + \text{KL}[q(\theta) || p(\theta | \mathbf{x})]$$
+                    </div>
+
+                    <div class="formula-box">
+                        $$\text{ELBO}(q) = \mathbb{E}_q[\log p(\mathbf{x}, \theta)] - \mathbb{E}_q[\log q(\theta)]$$
+                        $$= \mathbb{E}_q[\log p(\mathbf{x} | \theta)] - \text{KL}[q(\theta) || p(\theta)]$$
+                    </div>
+
+                    <div class="example-box">
+                        <h4>Key Insight</h4>
+                        <p>Since KL ≥ 0, maximizing ELBO minimizes KL divergence to true posterior</p>
+                    </div>
+                </section>
+
+                <section>
+                    <h3>Mean Field Variational Family</h3>
+                    <div class="bayesian-box">
+                        <h4>Independence Assumption</h4>
+                        <div class="formula-box">
+                            $$q(\theta) = \prod_{i=1}^d q_i(\theta_i)$$
+                        </div>
+                        <p>Assume posterior factorizes into independent marginals</p>
+                    </div>
+
+                    <h4>Coordinate Ascent VI (CAVI)</h4>
+                    <div class="formula-box">
+                        $$q_j^*(\theta_j) \propto \exp\left(\mathbb{E}_{q_{-j}}[\log p(\mathbf{x}, \theta)]\right)$$
+                    </div>
+                    <p class="small-text">Update each factor holding others fixed until convergence</p>
+                </section>
+
+                <section>
+                    <h3>VI Example: Bayesian Linear Regression</h3>
+                    <div class="example-box">
+                        <h4>Model</h4>
+                        <div class="formula-box">
+                            $$y_i = \mathbf{x}_i^T \boldsymbol{\beta} + \epsilon_i, \quad \epsilon_i \sim N(0, \sigma^2)$$
+                            $$\boldsymbol{\beta} \sim N(\mathbf{0}, \lambda^{-1}\mathbf{I})$$
+                        </div>
+                    </div>
+
+                    <div class="two-column">
+                        <div class="column">
+                            <h4>True Posterior:</h4>
+                            <p class="small-text">Conjugate → Analytical</p>
+                            <div class="formula-box">
+                                $$\boldsymbol{\beta} | \mathbf{y} \sim N(\boldsymbol{\mu}_n, \boldsymbol{\Sigma}_n)$$
+                            </div>
+                        </div>
+                        <div class="column">
+                            <h4>VI Approximation:</h4>
+                            <p class="small-text">Mean field factorization</p>
+                            <div class="formula-box">
+                                $$q(\boldsymbol{\beta}) = \prod_{j=1}^p N(\mu_j, \sigma_j^2)$$
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="warning-box">
+                        <p><strong>Result:</strong> VI underestimates posterior correlations but provides fast approximation</p>
+                    </div>
+                </section>
+
+                <section>
+                    <h3>Modern VI Applications</h3>
+                    <table class="comparison-table">
+                        <thead>
+                            <tr><th>Application</th><th>Model Type</th><th>VI Advantage</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Variational Autoencoders</strong></td>
+                                <td>Deep generative models</td>
+                                <td>Scales to high-dimensional data</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Topic Modeling (LDA)</strong></td>
+                                <td>Dirichlet-multinomial</td>
+                                <td>Handles millions of documents</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Bayesian Neural Networks</strong></td>
+                                <td>Weight uncertainty</td>
+                                <td>Tractable training at scale</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Gaussian Processes</strong></td>
+                                <td>Non-parametric regression</td>
+                                <td>Sparse inducing points</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </section>
+            </section>
+
+            <!-- Section 5: Spike and Slab -->
+            <section>
+                <section>
+                    <h3>Spike and Slab Methods</h3>
+                    <h4>Bayesian Variable Selection</h4>
+                </section>
+
+                <section>
+                    <h3>The Variable Selection Problem</h3>
+                    <div class="warning-box">
+                        <h4>High-Dimensional Challenge</h4>
+                        <p>Given regression $\mathbf{y} = \mathbf{X}\boldsymbol{\beta} + \boldsymbol{\epsilon}$ with $p$ predictors:</p>
+                        <ul>
+                            <li>Which variables are truly relevant?</li>
+                            <li>How to quantify selection uncertainty?</li>
+                            <li>Traditional methods (stepwise, LASSO) lack uncertainty quantification</li>
+                        </ul>
+                    </div>
+
+                    <div class="example-box">
+                        <h4>Applications</h4>
+                        <ul>
+                            <li>Genomics: Which genes affect disease?</li>
+                            <li>Finance: Which factors predict returns?</li>
+                            <li>Marketing: Which features drive customer behavior?</li>
+                        </ul>
+                    </div>
+                </section>
+
+                <section>
+                    <h3>Spike and Slab Prior</h3>
+                    <div class="bayesian-box">
+                        <h4>Two-Component Mixture</h4>
+                        <div class="formula-box">
+                            $$\beta_j | \gamma_j \sim (1 - \gamma_j) \delta_0 + \gamma_j N(0, \tau^2)$$
+                            $$\gamma_j \sim \text{Bernoulli}(\pi)$$
+                        </div>
+                    </div>
+
+                    <div class="two-column">
+                        <div class="column">
+                            <h4>Spike Component (δ₀):</h4>
+                            <ul>
+                                <li>Point mass at zero</li>
+                                <li>Variable excluded from model</li>
+                                <li>Probability: (1 - γⱼ)</li>
+                            </ul>
+                        </div>
+                        <div class="column">
+                            <h4>Slab Component (N(0,τ²)):</h4>
+                            <ul>
+                                <li>Diffuse normal distribution</li>
+                                <li>Variable included in model</li>
+                                <li>Probability: γⱼ</li>
+                            </ul>
+                        </div>
+                    </div>
+                </section>
+
+                <section>
+                    <h3>Posterior Inference</h3>
+                    <div class="formula-box">
+                        $$P(\gamma_j = 1 | \mathbf{y}) = \text{Posterior Inclusion Probability}$$
+                    </div>
+
+                    <div class="example-box">
+                        <h4>Interpretation</h4>
+                        <ul>
+                            <li><strong>P(γⱼ = 1 | y) > 0.5:</strong> Variable likely relevant</li>
+                            <li><strong>P(γⱼ = 1 | y) < 0.1:</strong> Variable likely irrelevant</li>
+                            <li><strong>0.1 < P(γⱼ = 1 | y) < 0.5:</strong> Uncertain</li>
+                        </ul>
+                    </div>
+
+                    <div class="warning-box">
+                        <h4>Computational Challenge</h4>
+                        <p>2^p possible models → MCMC sampling required for inference</p>
+                    </div>
+                </section>
+
+                <section>
+                    <h3>Example: Gene Expression Analysis</h3>
+                    <div class="example-box">
+                        <h4>Scenario</h4>
+                        <p>Predict cancer outcome from 1000 gene expression levels (p = 1000, n = 100)</p>
+                        
+                        <h4>Spike and Slab Setup</h4>
+                        <ul>
+                            <li><strong>Prior inclusion probability:</strong> π = 0.01 (expect ~10 relevant genes)</li>
+                            <li><strong>Slab variance:</strong> τ² = 1 (moderate effect sizes)</li>
+                            <li><strong>MCMC:</strong> Gibbs sampling for 10,000 iterations</li>
+                        </ul>
+                    </div>
+
+                    <div class="formula-box">
+                        $$\text{Selected genes} = \{j : P(\gamma_j = 1 | \mathbf{y}) > 0.5\}$$
+                    </div>
+                </section>
+
+                <section>
+                    <h3>Method Comparison</h3>
+                    <table class="comparison-table">
+                        <thead>
+                            <tr><th>Method</th><th>Uncertainty</th><th>Speed</th><th>Interpretability</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Spike & Slab</strong></td>
+                                <td>✅ Full posterior</td>
+                                <td>❌ Slow (MCMC)</td>
+                                <td>✅ Clear probabilities</td>
+                            </tr>
+                            <tr>
+                                <td><strong>LASSO</strong></td>
+                                <td>❌ Point estimates</td>
+                                <td>✅ Fast optimization</td>
+                                <td>⚠️ Arbitrary threshold</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Random Forest</strong></td>
+                                <td>⚠️ Importance scores</td>
+                                <td>✅ Fast</td>
+                                <td>❌ Black box</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Elastic Net</strong></td>
+                                <td>❌ Point estimates</td>
+                                <td>✅ Fast</td>
+                                <td>⚠️ Two hyperparameters</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </section>
+
+                <section>
+                    <h3>Spike and Slab Variants</h3>
+                    <div class="two-column">
+                        <div class="column">
+                            <h4>Continuous Spike & Slab:</h4>
+                            <div class="formula-box">
+                                $$\beta_j \sim (1-\pi)N(0,\tau_0^2) + \pi N(0,\tau_1^2)$$
+                            </div>
+                            <p class="small-text">τ₀² ≪ τ₁² (no exact zeros)</p>
+                        </div>
+                        <div class="column">
+                            <h4>Horseshoe Prior:</h4>
+                            <div class="formula-box">
+                                $$\beta_j \sim N(0, \lambda_j^2 \tau^2)$$
+                                $$\lambda_j \sim \text{Half-Cauchy}(1)$$
+                            </div>
+                            <p class="small-text">Heavy-tailed continuous shrinkage</p>
+                        </div>
+                    </div>
+
+                    <div class="bayesian-box">
+                        <h4>Trade-offs</h4>
+                        <ul>
+                            <li><strong>Discrete spike & slab:</strong> Clear interpretation, harder computation</li>
+                            <li><strong>Continuous variants:</strong> Easier computation, less interpretable</li>
+                        </ul>
+                    </div>
+                </section>
+            </section>
+
+            <!-- Section 6: Applications and Conclusions -->
+            <section>
+                <section>
+                    <h2>Part IV: Applications & Conclusions</h2>
+                </section>
+
+                <section>
+                    <h3>When to Use Each Method</h3>
+                    <table class="comparison-table">
+                        <thead>
+                            <tr><th>Scenario</th><th>Recommended Method</th><th>Rationale</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Small sample, strong prior knowledge</td>
+                                <td>Conjugate priors (Normal/Poisson)</td>
+                                <td>Exact inference, interpretable</td>
+                            </tr>
+                            <tr>
+                                <td>Large dataset, complex model</td>
+                                <td>Variational Inference</td>
+                                <td>Scalable, deterministic</td>
+                            </tr>
+                            <tr>
+                                <td>High-dimensional variable selection</td>
+                                <td>Spike & Slab</td>
+                                <td>Uncertainty quantification</td>
+                            </tr>
+                            <tr>
+                                <td>Real-time inference required</td>
+                                <td>Variational Inference</td>
+                                <td>Fast, no sampling variability</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </section>
+
+                <section>
+                    <h3>Software Implementation</h3>
+                    <div class="two-column">
+                        <div class="column">
+                            <h4>R Packages:</h4>
+                            <ul>
+                                <li><strong>conjugate:</strong> Conjugate priors</li>
+                                <li><strong>BayesVarSel:</strong> Spike & slab</li>
+                                <li><strong>VB:</strong> Variational methods</li>
+                                <li><strong>MCMCpack:</strong> General MCMC</li>
+                            </ul>
+                        </div>
+                        <div class="column">
+                            <h4>Python Libraries:</h4>
+                            <ul>
+                                <li><strong>PyMC:</strong> Probabilistic programming</li>
+                                <li><strong>Edward/TensorFlow Probability:</strong> VI</li>
+                                <li><strong>scikit-learn:</strong> Classical methods</li>
+                                <li><strong>Pyro:</strong> Deep probabilistic models</li>
+                            </ul>
+                        </div>
+                    </div>
+                </section>
+
+                <section>
+                    <h3>Future Directions</h3>
+                    <div class="bayesian-box">
+                        <h4>Active Research Areas</h4>
+                        <ul>
+                            <li><strong>Scalable MCMC:</strong> Hamiltonian Monte Carlo, No-U-Turn sampling</li>
+                            <li><strong>Amortized VI:</strong> Neural networks for inference</li>
+                            <li><strong>Normalizing Flows:</strong> More flexible variational families</li>
+                            <li><strong>Federated Learning:</strong> Distributed Bayesian inference</li>
+                            <li><strong>Causal Inference:</strong> Bayesian approach to causality</li>
+                        </ul>
+                    </div>
+                </section>
+
+                <section>
+                    <h3>Key Takeaways</h3>
+                    <ol>
+                        <li><strong>Conjugate priors</strong> provide exact, interpretable inference for fundamental models</li>
+                        <li><strong>Variational inference</strong> trades accuracy for computational efficiency in complex models</li>
+                        <li><strong>Spike & slab methods</strong> offer principled uncertainty quantification for variable selection</li>
+                        <li><strong>Method choice</strong> depends on data size, model complexity, and computational constraints</li>
+                        <li><strong>Bayesian framework</strong> unifies uncertainty quantification across diverse applications</li>
+                    </ol>
+
+                    <div class="example-box">
+                        <h4>The Bayesian Advantage</h4>
+                        <p>"Probability as a tool for reasoning under uncertainty, not just long-run frequencies"</p>
+                    </div>
+                </section>
+
+                <section>
+                    <h2>Questions & Discussion</h2>
+                    <div style="text-align: center; margin-top: 100px;">
+                        <h3>Thank you!</h3>
+                        <p>Advanced Bayesian Methods: From Conjugate Priors to Modern Approximations</p>
+                    </div>
+                </section>
+            </section>
+        </div>
+    </div>
+
+    <script>
+        Reveal.initialize({
+            hash: true,
+            transition: 'slide',
+            math: {
+                mathjax: 'https://cdn.jsdelivr.net/gh/mathjax/mathjax@2.7.8/MathJax.js',
+                config: 'TeX-AMS_HTML-full',
+                TeX: {
+                    Macros: {
+                        RR: "{\\bf R}",
+                        bold: ["{\\bf #1}", 1]
+                    }
+                }
+            },
+            plugins: [RevealMath, RevealHighlight]
+        });
+    </script>
+</body>
+</html>
