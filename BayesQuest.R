@@ -13,10 +13,8 @@ ui <- dashboardPage(
   dashboardHeader(title = "🧠 BayesQuest: Introduction to Bayesian Statistics"),
   
   dashboardSidebar(
-    useShinyjs(),
     sidebarMenu(
       id = "sidebarMenu",
-      selected = "intro",
       menuItem("🏠 Introduction", tabName = "intro", icon = icon("home")),
       menuItem("🎯 What is Bayesian Statistics?", tabName = "what_is_bayes", icon = icon("question-circle")),
       menuItem("📊 Bayes' Theorem", tabName = "foundations", icon = icon("brain")),
@@ -32,22 +30,7 @@ ui <- dashboardPage(
   ),
   
   dashboardBody(
-    useShinyjs(),
     tags$head(
-      tags$script('window.MathJax = { tex: { inlineMath: [["$", "$"], ["\\\\(", "\\\\)"]], displayMath: [["$$", "$$"], ["\\\\[", "\\\\]"]] } };'),
-      tags$script(HTML('
-        $(document).ready(function(){
-          // Force tab functionality
-          $(".sidebar-menu a").on("click", function(){
-            var tab = $(this).attr("data-value");
-            if(tab) {
-              Shiny.onInputChange("sidebarMenu", tab);
-            }
-          });
-        });
-      ')),
-      tags$script(src = "https://polyfill.io/v3/polyfill.min.js?features=es6"),
-      tags$script(id = "MathJax-script", async = NA, src = "https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"),
       tags$style(HTML('
         .content-wrapper { background-color: #f8f9fa; }
         
