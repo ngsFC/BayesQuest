@@ -15,6 +15,7 @@ ui <- dashboardPage(
   dashboardSidebar(
     useShinyjs(),
     sidebarMenu(
+      id = "sidebarMenu",
       menuItem("🏠 Introduction", tabName = "intro", icon = icon("home")),
       menuItem("🎯 What is Bayesian Statistics?", tabName = "what_is_bayes", icon = icon("question-circle")),
       menuItem("📊 Bayes' Theorem", tabName = "foundations", icon = icon("brain")),
